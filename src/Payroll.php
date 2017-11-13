@@ -2,58 +2,90 @@
 
 namespace Payroll;
 
-class Payroll{
+/**
+ * Payroll Class
+ * 
+ */
+class Payroll
+{
+	private $salaryDate;
+	private $firstExpensesDate;
+	private $secondExpensesDate;
 
 	/**
 	 * Receives a year and outputs the pay dates for that year.
 	 *
 	 * @param string $year
-	 * @return string $rows
+	 * @return array $rows
 	 */
-	public function payDates( $year ){
-
+	public function payDates( $year )
+	{
 		$months = range(1,12);
 		$rows = [];
         foreach ($months as $month)
         {
-			$dateObj   = \DateTime::createFromFormat('!m', $month);
-			$monthName = $dateObj->format('F');
-			$salaryDate = $this->figureOutTheSalaryDate($year, $month);
-			$firstExpensesDate = $this->figureOutTheFirstExpensesDate($year, $month);
-			$secondExpensesDate = $this->figureOutTheSecondExpensesDate($year, $month);			
-			$rows[] = [ $monthName, $firstExpensesDate, $secondExpensesDate, $salaryDate ];
+			$dateTime = \DateTime::createFromFormat('!m', $month);
+			$monthName = $dateTime->format('F');
+			$this->figureOutTheSalaryDate($year, $month)
+					->figureOutTheFirstExpensesDate($year, $month)
+					->figureOutTheSecondExpensesDate($year, $month);			
+			$rows[] = [ $monthName, $this->firstExpensesDate, $this->secondExpensesDate, $this->salaryDate ];
 		}
 		
 		return $rows;
 	}
 
+	/**
+	 * Figure out the Salary Date for a given month.
+	 *
+	 * @param string $year
+	 * @param string $month
+	 * @return $this
+	 */
 	private function figureOutTheSalaryDate($year, $month)
 	{
-		$salaryDate = date("Y-m-t", strtotime($year . '-' . $month . '-' . '15'));
-		$weekday = intval(date("N", strtotime($salaryDate)));
-		$salaryDate = $weekday == 6 ? date('Y-m-d', strtotime('-1 day', strtotime($salaryDate))) : $salaryDate;
-		$salaryDate = $weekday == 7 ? date('Y-m-d', strtotime('-2 day', strtotime($salaryDate))) : $salaryDate;
-		
-		return $salaryDate;
+		$this->salaryDate = date("Y-m-t", strtotime($year . '-' . $month . '-' . '15'));
+		$weekday = intval(date("N", strtotime($this->salaryDate)));
+		$salaryDate = $weekday == 6 ? date('Y-m-d', strtotime('-1 day', strtotime($this->salaryDate))) : $this->salaryDate;
+		$salaryDate = $weekday == 7 ? date('Y-m-d', strtotime('-2 day', strtotime($this->salaryDate))) : $this->salaryDate;
+		$this->salaryDate;
+
+		return $this;
 	}
 
+	/**
+	 * Figure out the First Expenses Date for a given month.
+	 *
+	 * @param string $year
+	 * @param string $month
+	 * @return $this
+	 */
 	private function figureOutTheFirstExpensesDate($year, $month)
 	{
-		$firstExpensesDate =  date("Y-m-d", strtotime($year .'-' . $month . '-' . 1));
-		$weekday = intval(date("N", strtotime($firstExpensesDate)));
-		$firstExpensesDate = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($firstExpensesDate))) : $firstExpensesDate;
-		$firstExpensesDate = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($firstExpensesDate))) : $firstExpensesDate; 
-	
-		return $firstExpensesDate;
+		$this->firstExpensesDate = date("Y-m-d", strtotime($year .'-' . $month . '-' . 1));
+		$weekday = intval(date("N", strtotime($this->firstExpensesDate)));
+		$this->firstExpensesDate = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($this->firstExpensesDate))) : $this->firstExpensesDate;
+		$this->firstExpensesDate = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($this->firstExpensesDate))) : $this->firstExpensesDate; 
+		$this->firstExpensesDate;
+
+		return $this;
 	}
 
+	/**
+	 * Figure out the Second Expenses Date for a given month.
+	 *
+	 * @param string $year
+	 * @param string $month
+	 * @return $this
+	 */
 	private function figureOutTheSecondExpensesDate($year, $month)
 	{
-		$secondExpensesDate =  date("Y-m-d", strtotime($year .'-' . $month . '-' . 15));
-		$weekday = intval(date("N", strtotime($secondExpensesDate)));
-		$firstExpensesDate = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($secondExpensesDate))) : $secondExpensesDate;
-		$secondExpensesDate = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($secondExpensesDate))) : $secondExpensesDate; 
-	
-		return $secondExpensesDate;
+		$this->secondExpensesDate = date("Y-m-d", strtotime($year .'-' . $month . '-' . 15));
+		$weekday = intval(date("N", strtotime($this->secondExpensesDate)));
+		$this->firstExpensesDate = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($this->secondExpensesDate))) : $this->secondExpensesDate;
+		$this->secondExpensesDate = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($this->secondExpensesDate))) : $this->secondExpensesDate; 
+		$this->secondExpensesDate;
+
+		return $this;
 	}
 }

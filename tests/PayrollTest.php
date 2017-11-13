@@ -6,20 +6,26 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 require_once  './vendor/autoload.php'; 
 
-class PayrollCommandTest extends \PHPUnit_Framework_TestCase{
-
-    public function testPayroll(){
-
+/**
+ * Payroll Command Test Class
+ * 
+ * methods(testPayroll)
+ */
+class PayrollCommandTest extends \PHPUnit_Framework_TestCase
+{
+    public function testPayroll()
+    {
         $application = new Application();
         $application->add(new PayrollCommand());
-
         $command = $application->find('Payroll:Payroll');
         $commandTester = new CommandTester($command);
+        $commandTester->setInputs(array('y'));
         $commandTester->execute(array(
             'command'      => $command->getName(),
-            'Year'         => '2017'
+            'Year'         => '2017',
+            'FileName'     => 'payroll.csv'
         ));    
-
+        
         $this->assertRegExp('/The pay dates are:
         +------------+------------------+------------------+------------+
         | Month Name | 1st Expenses Day | 2nd Expenses Day | Salary Day |
@@ -36,8 +42,7 @@ class PayrollCommandTest extends \PHPUnit_Framework_TestCase{
         | October    | 2017-10-02       | 2017-10-16       | 2017-10-31 |
         | November   | 2017-11-01       | 2017-11-15       | 2017-11-30 |
         | December   | 2017-12-01       | 2017-12-15       | 2017-12-29 |
-        +------------+------------------+------------------+------------+/', $commandTester->getDisplay());
-
+        +------------+------------------+------------------+------------+/', 
+        $commandTester->getDisplay());
     }
-
 }
