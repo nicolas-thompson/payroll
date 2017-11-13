@@ -24,13 +24,10 @@ class PayrollCommand extends Command{
 		
 		$output->writeln('The pay dates are: ');
 		$payRoll = new Payroll();
-		$input = $input->getArgument('Year');
-
-		$rows = $payRoll->payDates($input);
+		$rows = $payRoll->payDates($input->getArgument('Year'));
 		$table = new Table($output);
-        $table->setHeaders(['Month Name', 'Days in Month'])
+        $table->setHeaders(['Month Name', 'Salary Day'])
             ->setRows($rows)
             ->render();
 	}
-
 }

@@ -18,8 +18,11 @@ class Payroll{
         {
 			$dateObj   = \DateTime::createFromFormat('!m', $month);
 			$monthName = $dateObj->format('F');
-			$numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);			
-			$rows[] = [ $monthName, $numberOfDays ];
+			$salaryDay = date("Y-m-t", strtotime($year . '-' . $month . '-' . '15'));
+			$weekday = intval(date("N", strtotime($salaryDay)));
+			$salaryDay = $weekday == 6 ? date('Y-m-d', strtotime('-1 day', strtotime($salaryDay))) : $salaryDay;
+			$salaryDay = $weekday == 7 ? date('Y-m-d', strtotime('-2 day', strtotime($salaryDay))) : $salaryDay;	
+			$rows[] = [ $monthName, $salaryDay ];
         }
 
 		return $rows;
