@@ -26,7 +26,7 @@ class PayrollCommand extends Command{
 		$payRoll = new Payroll();
 		$rows = $payRoll->payDates($input->getArgument('Year'));
 		$table = new Table($output);
-        $table->setHeaders(['Month Name', 'Salary Day'])
+        $table->setHeaders(['Month Name', '1st Expenses Day', 'Salary Day'])
             ->setRows($rows)
             ->render();
 	}

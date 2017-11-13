@@ -21,8 +21,12 @@ class Payroll{
 			$salaryDay = date("Y-m-t", strtotime($year . '-' . $month . '-' . '15'));
 			$weekday = intval(date("N", strtotime($salaryDay)));
 			$salaryDay = $weekday == 6 ? date('Y-m-d', strtotime('-1 day', strtotime($salaryDay))) : $salaryDay;
-			$salaryDay = $weekday == 7 ? date('Y-m-d', strtotime('-2 day', strtotime($salaryDay))) : $salaryDay;	
-			$rows[] = [ $monthName, $salaryDay ];
+			$salaryDay = $weekday == 7 ? date('Y-m-d', strtotime('-2 day', strtotime($salaryDay))) : $salaryDay;
+			$firstExpensesDay =  date("Y-m-d", strtotime($year .'-' . $month . '-' . 1));
+			$weekday = intval(date("N", strtotime($firstExpensesDay)));
+			$firstExpensesDay = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($firstExpensesDay))) : $firstExpensesDay;
+			$firstExpensesDay = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($firstExpensesDay))) : $firstExpensesDay; 
+			$rows[] = [ $monthName, $firstExpensesDay, $salaryDay ];
         }
 
 		return $rows;
