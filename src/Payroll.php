@@ -7,8 +7,8 @@ class Payroll{
 	/**
 	 * Receives a year and outputs the pay dates for that year.
 	 *
-	 * @param string $password
-	 * @return string $hash
+	 * @param string $year
+	 * @return string $rows
 	 */
 	public function payDates( $year ){
 
@@ -19,11 +19,8 @@ class Payroll{
 			$dateObj   = \DateTime::createFromFormat('!m', $month);
 			$monthName = $dateObj->format('F');
 			$salaryDate = $this->figureOutTheSalaryDate($year, $month);
-			$firstExpensesDay =  date("Y-m-d", strtotime($year .'-' . $month . '-' . 1));
-			$weekday = intval(date("N", strtotime($firstExpensesDay)));
-			$firstExpensesDay = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($firstExpensesDay))) : $firstExpensesDay;
-			$firstExpensesDay = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($firstExpensesDay))) : $firstExpensesDay; 
-			$rows[] = [ $monthName, $firstExpensesDay, $salaryDate ];
+			$firstExpensesDate = $this->figureOutTheFirstExpensesDate($year, $month);
+			$rows[] = [ $monthName, $firstExpensesDate, $salaryDate ];
         }
 
 		return $rows;
@@ -31,10 +28,21 @@ class Payroll{
 
 	private function figureOutTheSalaryDate($year, $month)
 	{
-		$salaryDay = date("Y-m-t", strtotime($year . '-' . $month . '-' . '15'));
-		$weekday = intval(date("N", strtotime($salaryDay)));
-		$salaryDay = $weekday == 6 ? date('Y-m-d', strtotime('-1 day', strtotime($salaryDay))) : $salaryDay;
-		$salaryDay = $weekday == 7 ? date('Y-m-d', strtotime('-2 day', strtotime($salaryDay))) : $salaryDay;
-		return $salaryDay;
+		$salaryDate = date("Y-m-t", strtotime($year . '-' . $month . '-' . '15'));
+		$weekday = intval(date("N", strtotime($salaryDate)));
+		$salaryDate = $weekday == 6 ? date('Y-m-d', strtotime('-1 day', strtotime($salaryDate))) : $salaryDate;
+		$salaryDate = $weekday == 7 ? date('Y-m-d', strtotime('-2 day', strtotime($salaryDate))) : $salaryDate;
+		
+		return $salaryDate;
+	}
+
+	private function figureOutTheFirstExpensesDate($year, $month)
+	{
+		$firstExpensesDate =  date("Y-m-d", strtotime($year .'-' . $month . '-' . 1));
+		$weekday = intval(date("N", strtotime($firstExpensesDate)));
+		$firstExpensesDate = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($firstExpensesDate))) : $firstExpensesDate;
+		$firstExpensesDate = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($firstExpensesDate))) : $firstExpensesDate; 
+	
+		return $firstExpensesDate;
 	}
 }
