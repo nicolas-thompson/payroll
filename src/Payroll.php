@@ -20,9 +20,10 @@ class Payroll{
 			$monthName = $dateObj->format('F');
 			$salaryDate = $this->figureOutTheSalaryDate($year, $month);
 			$firstExpensesDate = $this->figureOutTheFirstExpensesDate($year, $month);
-			$rows[] = [ $monthName, $firstExpensesDate, $salaryDate ];
-        }
-
+			$secondExpensesDate = $this->figureOutTheSecondExpensesDate($year, $month);			
+			$rows[] = [ $monthName, $firstExpensesDate, $secondExpensesDate, $salaryDate ];
+		}
+		
 		return $rows;
 	}
 
@@ -44,5 +45,15 @@ class Payroll{
 		$firstExpensesDate = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($firstExpensesDate))) : $firstExpensesDate; 
 	
 		return $firstExpensesDate;
+	}
+
+	private function figureOutTheSecondExpensesDate($year, $month)
+	{
+		$secondExpensesDate =  date("Y-m-d", strtotime($year .'-' . $month . '-' . 15));
+		$weekday = intval(date("N", strtotime($secondExpensesDate)));
+		$firstExpensesDate = $weekday == 6 ? date('Y-m-d', strtotime('+2 day', strtotime($secondExpensesDate))) : $secondExpensesDate;
+		$secondExpensesDate = $weekday == 7 ? date('Y-m-d', strtotime('+1 day', strtotime($secondExpensesDate))) : $secondExpensesDate; 
+	
+		return $secondExpensesDate;
 	}
 }
