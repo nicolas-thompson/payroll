@@ -11,6 +11,17 @@ class Payroll{
 	 * @return string $hash
 	 */
 	public static function payDates( $year ){
-		return $year;
+
+		$months = range(1,12);
+		$rows = [];
+        foreach ($months as $month)
+        {
+			$dateObj   = \DateTime::createFromFormat('!m', $month);
+			$monthName = $dateObj->format('F');
+			$numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);			
+			$rows[] = [ $monthName, $numberOfDays ];
+        }
+
+		return $rows;
 	}
 }

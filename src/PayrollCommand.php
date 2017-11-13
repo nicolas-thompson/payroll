@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 use Payroll\Payroll;
@@ -21,13 +22,15 @@ class PayrollCommand extends Command{
 
 	protected function execute(InputInterface $input, OutputInterface $output){
 		
+		$output->writeln('The pay dates are: ');
 		$payRoll = new Payroll();
 		$input = $input->getArgument('Year');
 
-		$result = $payRoll->payDates($input);
-
-		$output->writeln('The pay dates are: ' . $result);
-
+		$rows = $payRoll->payDates($input);
+		$table = new Table($output);
+        $table->setHeaders(['Month Name', 'Days in Month'])
+            ->setRows($rows)
+            ->render();
 	}
 
 }
